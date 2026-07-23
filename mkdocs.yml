@@ -4,11 +4,11 @@ theme:
   name: material
   language: ja
   palette:
-    primary: teal
-features:
-  - navigation.tabs
-  - navigation.top
-  - serarch.suggest
+    primary: deep purple
+  features:
+    - navigation.tabs
+    - navigation.top
+    - serarch.suggest
 
 nav:
   - ホーム: index.md
