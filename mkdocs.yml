@@ -1,0 +1,17 @@
+site_name: utility_document
+site_description: 便利な情報をまとめたドキュメント
+theme:
+  name: material
+  language: ja
+  palette:
+    primary: teal
+features:
+  - navigation.tabs
+  - navigation.top
+  - serarch.suggest
+
+nav:
+  - ホーム: index.md
+  - Ubuntu:
+    - セットアップ手順（24.04）: ubuntu/setup.md
+  - 開発者テンプレート: developper_template.md
