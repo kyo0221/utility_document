@@ -14,5 +14,5 @@ theme:
 nav:
   - ホーム: index.md
   - Ubuntu:
-    - セットアップ手順（24.04）: ubuntu/setup.md
+    - セットアップ手順（24.04 / amd64）: ubuntu/setup.md
   - 開発者テンプレート: developper_template.md
