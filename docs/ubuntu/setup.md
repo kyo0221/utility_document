@@ -1,5 +1,11 @@
 # Ubuntu 24.04 セットアップ手順（x86_64 / amd64）
 
+以下の手順1〜7をひとつにまとめた対話形式のスクリプト [`setup_all_in_one.bash`](./setup_all_in_one.bash) も用意している。実行するだけで大部分のセットアップが完了し、Gitのユーザー名やPersonal Access Tokenなど個別に必要な情報は実行中に日本語で質問される。
+
+```bash
+bash setup_all_in_one.bash
+```
+
 ## 1. ホームディレクトリ名を英語表記に変換する
 
 日本語ロケールでUbuntuをインストールすると、`~/デスクトップ` `~/ダウンロード` `~/ドキュメント` のように日本語のディレクトリ名で作成される。これらを英語表記（`Desktop` `Downloads` `Documents` など）に変換する。
