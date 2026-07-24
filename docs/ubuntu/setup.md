@@ -167,7 +167,26 @@ git config --global user.name "ユーザー名"
 git config --global user.email "メールアドレス"
 ```
 
-### 6.2 commitメッセージのテンプレート作成
+### 6.2 認証情報の保存
+
+HTTPS経由でリモートリポジトリ（GitHub等）にpush/pullするたびにユーザー名・パスワード（またはPersonal Access Token）の入力を求められるのを避けるため、認証情報をディスクに保存しておく。
+
+```bash
+git config --global credential.helper store
+```
+
+設定後、最初の1回だけ認証情報の入力を求められ、以降は`~/.git-credentials`に平文で保存された内容が自動的に使用される。共有PCなど他ユーザーがアクセスできる環境では、平文保存になる点に注意する。
+
+### 6.3 デフォルトエディタの設定
+
+`git commit`やコンフリクト解消などでエディタが起動する際に使われるデフォルトエディタをvimに設定する。
+
+```bash
+sudo apt install vim
+git config --global core.editor "vim"
+```
+
+### 6.4 commitメッセージのテンプレート作成
 
 Gitでコミット時に使いたいデフォルトメッセージを`~/.gitmessage.txt`に記述する。
 
