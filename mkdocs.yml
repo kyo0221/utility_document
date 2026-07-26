@@ -15,4 +15,7 @@ nav:
   - ホーム: index.md
   - Ubuntu:
     - セットアップ手順（24.04 / amd64）: ubuntu/setup.md
-  - 開発者テンプレート: developper_template.md
+  - 開発者テンプレート:
+    - C++: developper_template/cpp.md
+    - Python: developper_template/python.md
+    - Rust: developper_template/rust.md
