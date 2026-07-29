@@ -1,0 +1,30 @@
+[project]
+site_name = "utility_document"
+site_description = "便利な情報をまとめたドキュメント"
+site_url = "https://kyo0221.github.io/utility_document/"
+
+nav = [
+  { "ホーム" = "index.md" },
+  { "Ubuntu" = [
+    { "セットアップ手順（24.04 / amd64）" = "ubuntu/setup.md" },
+  ] },
+  { "開発者テンプレート" = [
+    { "C++" = "developper_template/cpp.md" },
+    { "Python" = "developper_template/python.md" },
+    { "Rust" = "developper_template/rust.md" },
+  ] },
+]
+
+[project.theme]
+# Material for MkDocs と同じ見た目を維持する
+variant = "classic"
+language = "ja"
+features = [
+  "navigation.tabs",
+  "navigation.top",
+  "search.suggest",
+]
+
+[project.theme.palette]
+scheme = "slate"
+primary = "deep purple"
