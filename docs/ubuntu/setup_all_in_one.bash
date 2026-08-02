@@ -482,31 +482,51 @@ step_install_tilix() {
         return
     fi
 
-    if ! ask_yes_no "Tilixを既定のターミナルに設定しますか？" y; then
-        log_info "既定のターミナル設定はスキップしました。"
-        return
-    fi
-
-    # x-terminal-emulator の登録パスはパッケージ側の都合で変わり得るため、候補一覧から取得する。
-    local tilix_alt
-    tilix_alt="$(update-alternatives --list x-terminal-emulator 2>/dev/null | grep -i tilix | head -n1)"
-    if [[ -n "$tilix_alt" ]]; then
-        if sudo update-alternatives --set x-terminal-emulator "$tilix_alt"; then
-            log_ok "x-terminal-emulatorをTilixに設定しました（${tilix_alt}）。"
+    if ask_yes_no "Tilixを既定のターミナルに設定しますか？" y; then
+        # x-terminal-emulator の登録パスはパッケージ側の都合で変わり得るため、候補一覧から取得する。
+        local tilix_alt
+        tilix_alt="$(update-alternatives --list x-terminal-emulator 2>/dev/null | grep -i tilix | head -n1)"
+        if [[ -n "$tilix_alt" ]]; then
+            if sudo update-alternatives --set x-terminal-emulator "$tilix_alt"; then
+                log_ok "x-terminal-emulatorをTilixに設定しました（${tilix_alt}）。"
+            else
+                log_warn "update-alternativesでの既定ターミナル設定に失敗しました。"
+            fi
         else
-            log_warn "update-alternativesでの既定ターミナル設定に失敗しました。"
+            log_warn "x-terminal-emulatorの候補にTilixが見つかりませんでした。設定をスキップします。"
+        fi
+
+        # GNOMEのCtrl+Alt+Tショートカットで起動するターミナルもTilixにする。
+        if require_cmd gsettings; then
+            if gsettings set org.gnome.desktop.default-applications.terminal exec tilix 2>/dev/null; then
+                log_ok "GNOMEの既定ターミナル（Ctrl+Alt+T）をTilixに設定しました。"
+            else
+                log_warn "gsettingsでの設定に失敗しました（GNOME以外のデスクトップ環境では不要です）。"
+            fi
         fi
     else
-        log_warn "x-terminal-emulatorの候補にTilixが見つかりませんでした。設定をスキップします。"
+        log_info "既定のターミナル設定はスキップしました。"
     fi
 
-    # GNOMEのCtrl+Alt+Tショートカットで起動するターミナルもTilixにする。
-    if require_cmd gsettings; then
-        if gsettings set org.gnome.desktop.default-applications.terminal exec tilix 2>/dev/null; then
-            log_ok "GNOMEの既定ターミナル（Ctrl+Alt+T）をTilixに設定しました。"
+    # キーボードショートカットのカスタム設定（tilix_keybindings.bash を呼び出す）
+    if ask_yes_no "Tilixのキーボードショートカットをカスタム設定（分割: Ctrl+Shift+E / Ctrl+Shift+O、セッション切替: Ctrl+N / Ctrl+U 等）に変更しますか？" y; then
+        local kb_script
+        kb_script="$(cd "$(dirname "${BASH_SOURCE[0]}")" 2>/dev/null && pwd)/tilix_keybindings.bash"
+        if [[ -f "$kb_script" ]]; then
+            bash "$kb_script" || log_warn "キーボードショートカットの設定に失敗しました。"
         else
-            log_warn "gsettingsでの設定に失敗しました（GNOME以外のデスクトップ環境では不要です）。"
+            log_info "同じディレクトリに tilix_keybindings.bash が見つからないため、公開サイトから取得します。"
+            local tmp_kb
+            tmp_kb="$(mktemp -u /tmp/tilix_keybindings.XXXXXX.bash)"
+            if curl -fsSL -o "$tmp_kb" "https://kyo0221.github.io/utility_document/ubuntu/tilix_keybindings.bash"; then
+                bash "$tmp_kb" || log_warn "キーボードショートカットの設定に失敗しました。"
+                rm -f "$tmp_kb"
+            else
+                log_warn "tilix_keybindings.bash の取得に失敗しました。スキップします。"
+            fi
         fi
+    else
+        log_info "キーボードショートカットの変更はスキップしました。"
     fi
 }
 

@@ -289,7 +289,33 @@ GNOME環境で`Ctrl+Alt+T`ショートカットから起動するターミナル
 gsettings set org.gnome.desktop.default-applications.terminal exec tilix
 ```
 
-### 8.2 補足: 「VTE設定の問題」警告が出る場合
+### 8.2 キーボードショートカットのカスタム設定
+
+Tilixのキーボードショートカットはdconf（`/com/gexperts/Tilix/keybindings/`）に保存されるため、GUIを開かなくても`gsettings`で変更できる。デフォルトから以下のカスタム設定に変更する。
+
+| 操作 | デフォルト | 変更後 |
+|------|-----------|--------|
+| ターミナルを右に分割 | Ctrl+Alt+R | Ctrl+Shift+E |
+| ターミナルを下に分割 | Ctrl+Alt+D | Ctrl+Shift+O |
+| セッションを開く | Ctrl+Shift+O | 無効化（下分割と衝突するため） |
+| 次のセッションへ切替 | Ctrl+PageDown | Ctrl+N |
+| 前のセッションへ切替 | Ctrl+PageUp | Ctrl+U |
+| セッションを次へ並べ替え | Ctrl+Shift+PageDown | 無効化 |
+| セッションを前へ並べ替え | Ctrl+Shift+PageUp | 無効化 |
+
+一括適用するスクリプト [`tilix_keybindings.bash`](./tilix_keybindings.bash) を用意している（`setup_all_in_one.bash`からも対話で呼び出される）。
+
+```bash
+bash tilix_keybindings.bash
+```
+
+設定は起動中のTilixにも即座に反映される。デフォルトに戻す場合は以下を実行する。
+
+```bash
+dconf reset -f /com/gexperts/Tilix/keybindings/
+```
+
+### 8.3 補足: 「VTE設定の問題」警告が出る場合
 
 Tilixの設定画面などで「VTE設定に問題があります」という警告が表示される場合は、以下のシンボリックリンクを作成すると解消できる。
 
