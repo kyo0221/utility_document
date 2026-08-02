@@ -7,6 +7,7 @@ nav = [
   { "ホーム" = "index.md" },
   { "Ubuntu" = [
     { "セットアップ手順（24.04 / amd64）" = "ubuntu/setup.md" },
+    { "ターミナル環境（starship + Nerd Font）" = "ubuntu/terminal.md" },
   ] },
   { "開発者テンプレート" = [
     { "C++" = "developper_template/cpp.md" },
