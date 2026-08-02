@@ -2,7 +2,7 @@
 #
 # Ubuntu 24.04 (x86_64 / amd64) 環境セットアップ 統合スクリプト
 #
-# docs/ubuntu/setup.md に記載されている手順（1〜7）をひとつにまとめたものです。
+# docs/ubuntu/setup.md に記載されている手順（1〜8）をひとつにまとめたものです。
 # 実行するだけで、一般的なセットアップの大部分が完了するように設計しています。
 # Gitのユーザー名やPersonal Access Tokenなど個別の情報が必要な項目は、
 # 実行中に日本語で対話形式で質問します。
@@ -464,6 +464,53 @@ step_bashrc_git_prompt() {
 }
 
 # ============================================================
+# 8. Tilixのインストールと既定のターミナル設定
+# ============================================================
+
+step_install_tilix() {
+    log_step "8. Tilixのインストールと既定のターミナル設定"
+
+    if ! ask_yes_no "ターミナルエミュレータTilixをインストールしますか？" y; then
+        log_info "スキップしました。"
+        return
+    fi
+
+    if sudo apt install -y tilix; then
+        log_ok "Tilixをインストールしました。"
+    else
+        log_warn "Tilixのインストールに失敗しました。この項目をスキップします。"
+        return
+    fi
+
+    if ! ask_yes_no "Tilixを既定のターミナルに設定しますか？" y; then
+        log_info "既定のターミナル設定はスキップしました。"
+        return
+    fi
+
+    # x-terminal-emulator の登録パスはパッケージ側の都合で変わり得るため、候補一覧から取得する。
+    local tilix_alt
+    tilix_alt="$(update-alternatives --list x-terminal-emulator 2>/dev/null | grep -i tilix | head -n1)"
+    if [[ -n "$tilix_alt" ]]; then
+        if sudo update-alternatives --set x-terminal-emulator "$tilix_alt"; then
+            log_ok "x-terminal-emulatorをTilixに設定しました（${tilix_alt}）。"
+        else
+            log_warn "update-alternativesでの既定ターミナル設定に失敗しました。"
+        fi
+    else
+        log_warn "x-terminal-emulatorの候補にTilixが見つかりませんでした。設定をスキップします。"
+    fi
+
+    # GNOMEのCtrl+Alt+Tショートカットで起動するターミナルもTilixにする。
+    if require_cmd gsettings; then
+        if gsettings set org.gnome.desktop.default-applications.terminal exec tilix 2>/dev/null; then
+            log_ok "GNOMEの既定ターミナル（Ctrl+Alt+T）をTilixに設定しました。"
+        else
+            log_warn "gsettingsでの設定に失敗しました（GNOME以外のデスクトップ環境では不要です）。"
+        fi
+    fi
+}
+
+# ============================================================
 # メイン処理
 # ============================================================
 
@@ -483,6 +530,7 @@ main() {
     step_install_ros2
     step_setup_git
     step_bashrc_git_prompt
+    step_install_tilix
 
     echo
     echo "============================================================"

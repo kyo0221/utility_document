@@ -1,6 +1,6 @@
 # Ubuntu 24.04 セットアップ手順（x86_64 / amd64）
 
-以下の手順1〜7をひとつにまとめた対話形式のスクリプト [`setup_all_in_one.bash`](./setup_all_in_one.bash) も用意している。実行するだけで大部分のセットアップが完了し、Gitのユーザー名やPersonal Access Tokenなど個別に必要な情報は実行中に日本語で質問される。
+以下の手順1〜8をひとつにまとめた対話形式のスクリプト [`setup_all_in_one.bash`](./setup_all_in_one.bash) も用意している。実行するだけで大部分のセットアップが完了し、Gitのユーザー名やPersonal Access Tokenなど個別に必要な情報は実行中に日本語で質問される。
 
 ```bash
 bash setup_all_in_one.bash
@@ -257,3 +257,42 @@ source ~/.bashrc
 ```
 
 gitリポジトリ内に`cd`すると、プロンプトに`(ブランチ名)`が表示されるようになる。
+
+---
+
+## 8. Tilixのインストールと既定のターミナル設定
+
+タイル分割（画面分割）に対応したターミナルエミュレータ[Tilix](https://gnunn1.github.io/tilix-web/)をaptでインストールする。
+
+```bash
+sudo apt update
+sudo apt install tilix
+```
+
+### 8.1 既定のターミナルに設定する
+
+Debian/Ubuntuでは、他のアプリケーションからターミナルを起動する際に使われる既定コマンドが`x-terminal-emulator`として管理されている。これをTilixに切り替える。
+
+```bash
+sudo update-alternatives --config x-terminal-emulator
+```
+
+実行すると候補一覧が表示されるので、`/usr/bin/tilix.wrapper`の番号を入力する。対話なしで直接設定する場合は以下を実行する。
+
+```bash
+sudo update-alternatives --set x-terminal-emulator /usr/bin/tilix.wrapper
+```
+
+GNOME環境で`Ctrl+Alt+T`ショートカットから起動するターミナルもTilixにする場合は、以下も実行する。
+
+```bash
+gsettings set org.gnome.desktop.default-applications.terminal exec tilix
+```
+
+### 8.2 補足: 「VTE設定の問題」警告が出る場合
+
+Tilixの設定画面などで「VTE設定に問題があります」という警告が表示される場合は、以下のシンボリックリンクを作成すると解消できる。
+
+```bash
+sudo ln -s /etc/profile.d/vte-2.91.sh /etc/profile.d/vte.sh
+```
